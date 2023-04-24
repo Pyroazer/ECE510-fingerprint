@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Smart Door Lock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      /* Define global styles for the page */
+      * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+      /* Define styles for the top bar */
+      .top-bar {
+        background-color: #333333;
+        color: #ffffff;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .profile-name {
+        font-size: 16px;
+        margin-right: auto;
+      }
+      .page-title {
+        font-size: 24px;
+      }
+      /* Define styles for the buttons */
+      .button {
+        background-color: #ffffff;
+        color: #333333;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      .button:hover {
+        background-color: #f2f2f2;
+      }
+      /* Define styles for the pop up */
+      .popup {
+        margin-left: auto;
+        margin-right: auto;
+        width : 500px;
+        display: none; 
+      }
+      .popup-active {
+        display: block;
+      }
+      .popup-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .popup-table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      .popup-table th,
+      .popup-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #f2f2f2;
+      }
+      .popup-table th {
+        background-color: #333333;
+        color: #ffffff;
+      }
+      .popup-video {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <div class="top-bar">
+    <div class="profile-info">
+      <i class="fa fa-user" style="color: red;" aria-hidden="true"></i>
+      <div class="profile-name">John Doe</div>
+    </div>
+      <div class="page-title" style="margin-left: 150px;">Smart Door Lock
+        </div>
+        <div class="page-title" style="margin-right: -490px;"><a href="main.html"><button style="background-color: red; color: white;" class="button pulseBox">Change Password</button></a> 
+        </div>
+      <div class="page-title" style="margin-right: -20px;"> <a href="main.html"><button style="background-color: red; color: white;" class="button pulseBox">Logout</button></a> 
+
+      </div>
+
+    </div>
+    <div class="content" style="align-items: center; text-align: center; margin-top: 30px;">
+      <button class="button" id="log-button">Log</button>
+      <button class="button" id="live-feed-button">Live Feed</button>
+    </div>
+    <div class="popup" id="log-popup">
+      <div class="popup-header">Log</div>
+      <table class="popup-table" id = "popup-table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Status</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="popup" id="live-feed-popup">
+      <div class="popup-header">Live Feed</div>
+      <video class="popup-video" autoplay></video>
+    </div>
+    <script>
+      // Define variables for the buttons and popups
+      const logButton = document.getElementById("log-button");
+      const logPopup = document.getElementById("log-popup");
+      const liveFeedButton = document.getElementById("live-feed-button");
+      const liveFeedPopup = document.getElementById("live-feed-popup");
+      const logoutButton = document.getElementById("logout-button");
+      // Add event listeners for the buttons
+      logButton.addEventListener("click", () => {
+      logPopup.classList.add("popup-active");
+  });
+
+  liveFeedButton.addEventListener("click", () => {
+    liveFeedPopup.classList.add("popup-active");
+    const video = document.querySelector(".popup-video");
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
+  logButton.addEventListener("click", () => {
+  liveFeedPopup.classList.remove("popup-active");
+  logPopup.classList.add("popup-active");
+});
+  //logoutButton.addEventListener("click", () => {
+    // Implement logout functionality
+  //});
+</script>
+<!-- Import the Firebase SDKs -->
+
+
+<!-- Import the Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.0/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.19.0/firebase-database.js";
+
+  // Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBx-zsKJG-5rMMJsPFcf_n3oTkOHV8T1pM",
+    authDomain: "webapp-36610.firebaseapp.com",
+    databaseURL: "https://webapp-36610-default-rtdb.firebaseio.com",
+    projectId: "webapp-36610",
+    storageBucket: "webapp-36610.appspot.com",
+    messagingSenderId: "514654122355",
+    appId: "1:514654122355:web:f40bff9fe6089d772e1506",
+    measurementId: "G-SCQNYM8WFN"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+
+  // Reference to the Firebase Realtime Database
+  const dbRef = ref(getDatabase());
+
+  // Retrieve data from Firebase
+  onValue(dbRef, function(snapshot) {
+    // Get the table element
+    const table = document.getElementById("popup-table");
+
+    // Clear existing table data
+    // table.innerHTML = "";
+
+    // Loop through each child snapshot
+    snapshot.forEach(function(childSnapshot) {
+      // Get the child data
+      // console.log(childSnapshot.val()[])
+      const childData = childSnapshot.val();
+      
+      console.log(childData)
+      const values = Object.keys(childData)
+      for(let i=0; i< values.length; i++) {
+        const value = childData[values[i]]
+        const row = table.insertRow(-1);
+        const idCell = row.insertCell(0);
+        const statusCell = row.insertCell(1);
+        const timestampCell = row.insertCell(2);
+        idCell.innerHTML = value.Id;
+      statusCell.innerHTML = value.Status;
+      timestampCell.innerHTML = value.timestamp;
+      }
+
+      // Create cells for each data field
+      
+
+      // Set the data in the cells
+
+    });
+  });
+</script>
+
+
+
+ </body>
+</html>
