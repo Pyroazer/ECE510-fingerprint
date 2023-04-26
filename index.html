@@ -4,7 +4,7 @@
    <head>
       <meta charset="utf-8">
       <title>Login and Registration Form in HTML | CodingNepal</title>
-      <link rel="stylesheet" href="index.css">
+      <link rel="stylesheet" href="main.css">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
    <body>
@@ -30,17 +30,17 @@
                <div class="slider-tab"></div>
             </div>
             <div class="form-inner">
-               <form action="#" class="login">
+               <form onsubmit="return validate();" class="login">
                   <div class="field">
-                     <input type="text" placeholder="Email Address" required>
+                     <input type="text" placeholder="Email Address" id="username" required>
                   </div>
                   <div class="field">
-                     <input type="password" placeholder="Password" required>
+                     <input type="password" placeholder="Password" id="password" required>
                   </div>
                   <div class="pass-link">
                      <a href="#">Forgot password?</a>
                   </div>
-                  <a style="margin-left: 110px;" href="main.html" class="button">Login</a>
+                  <button style="margin-left: 110px;" class="button">Login</button>
                   <div class="signup-link">
                      Not a member? <a href="">Signup now</a>
                   </div>
@@ -55,7 +55,7 @@
                   <div class="field">
                      <input type="password" placeholder="Confirm password" required>
                   </div>
-                  <a style="margin-left: 110px;" href="index.html" class="button">Sign up</a>
+                  <a style="margin-left: 110px;" href="main.html" class="button">Sign up</a>
                </form>
             </div>
          </div>
@@ -78,6 +78,22 @@
            signupBtn.click();
            return false;
          });
+
+         function validate() {
+         var username = document.getElementById("username").value;
+         var password = document.getElementById("password").value;
+         if (username == "" || password == "") {
+            alert("Please enter both username and password");
+            return false;
+         }
+         if (username == "iotwebapp510@gmail.com" && password == "ece510") {
+            window.location.href = "updated_new.html";
+            return false;
+         } else {
+            alert("Incorrect username or password");
+            return false;
+         }
+      }
       </script>
    </body>
 </html>
